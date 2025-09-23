@@ -1,0 +1,22 @@
+{
+  "name": "api-gateway-lambda-authorizer",
+  "version": "1.0.0",
+  "description": "Lambda Authorizer for API Gateway with JWT/Cognito authentication",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "package": "npm run build && zip -r lambda-authorizer.zip . -x node_modules/.bin/* *.ts *.map",
+    "deploy": "npm run package && aws lambda update-function-code --function-name api-gateway-authorizer --zip-file fileb://lambda-authorizer.zip"
+  },
+  "dependencies": {
+    "@aws-sdk/client-ssm": "^3.500.0",
+    "jsonwebtoken": "^9.0.2",
+    "jwks-rsa": "^3.0.1"
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.119",
+    "@types/jsonwebtoken": "^9.0.5",
+    "@types/node": "^20.8.10",
+    "typescript": "^5.2.2"
+  }
+}

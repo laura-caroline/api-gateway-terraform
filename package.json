@@ -1,0 +1,15 @@
+{
+  "name": "api-gateway-terraform",
+  "version": "1.0.0",
+  "description": "Este projeto implementa um API Gateway com Lambda Authorizer para autenticação JWT/Cognito, permitindo que microserviços sejam acessados através de um ponto único de entrada com autenticação centralizada.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "jsonwebtoken": "^9.0.2"
+  }
+}
