@@ -25,7 +25,7 @@ data "aws_region" "current" {}
 
 # Buscar JWT_SECRET do Parameter Store
 data "aws_ssm_parameter" "jwt_secret" {
-  name            = "/common.dev/JWT_SECRET"
+  name            = "/otto99.hml/JWT_SECRET"
   with_decryption = true
 }
 
