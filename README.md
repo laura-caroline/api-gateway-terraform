@@ -67,15 +67,18 @@
 
 ### Deploy do Ambiente de Produção
 ```bash
+** Configure sua CLI para apontar pra conta de ambiente de producao
 cd environments/prod
 terraform init
 terraform plan
 terraform apply
 ```
 
-### Deploy do Ambiente de Desenvolvimento
+### Deploy do Ambiente de Homologacao
 ```bash
-cd environments/dev
+** Configure sua CLI para apontar pra conta de ambiente de hml
+
+cd environments/hml
 terraform init
 terraform plan
 terraform apply

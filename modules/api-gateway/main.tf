@@ -12,11 +12,16 @@ terraform {
 data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
+# Local values para definir sufixo do ambiente
+locals {
+  env_suffix = var.stage_name != "" ? "-${var.stage_name}" : "-prod"
+}
+
 # Lambda Authorizer Module
 module "lambda_authorizer" {
   source = "../lambda-authorizer"
 
-  function_name           = "${var.project_name}-authorizer"
+  function_name           = "${var.project_name}${local.env_suffix}-authorizer"
   project_name           = var.project_name
   environment            = var.stage_name != "" ? var.stage_name : "prod"
   jwt_secret_param_name  = var.stage_name == "hml" ? "/otto99.hml/JWT_SECRET" : "/common.prod/JWT_SECRET"
@@ -25,8 +30,8 @@ module "lambda_authorizer" {
 
 # API Gateway
 resource "aws_api_gateway_rest_api" "api" {
-  name        = "${var.project_name}-api"
-  description = "API Gateway for microservices with JWT authentication"
+  name        = "${var.project_name}${local.env_suffix}-api"
+  description = "API Gateway for microservices with JWT authentication${var.stage_name != "" ? " (${var.stage_name})" : ""}"
 
   endpoint_configuration {
     types = ["REGIONAL"]
@@ -37,7 +42,7 @@ resource "aws_api_gateway_rest_api" "api" {
 
 # Authorizer do API Gateway
 resource "aws_api_gateway_authorizer" "jwt_authorizer" {
-  name                   = "${var.project_name}-jwt-authorizer"
+  name                   = "${var.project_name}${local.env_suffix}-jwt-authorizer"
   rest_api_id           = aws_api_gateway_rest_api.api.id
   authorizer_uri        = module.lambda_authorizer.invoke_arn
   authorizer_credentials = aws_iam_role.api_gateway_authorizer_role.arn
@@ -48,7 +53,7 @@ resource "aws_api_gateway_authorizer" "jwt_authorizer" {
 
 # IAM Role para API Gateway invocar Lambda Authorizer
 resource "aws_iam_role" "api_gateway_authorizer_role" {
-  name = "${var.project_name}-api-gateway-authorizer-role"
+  name = "${var.project_name}${local.env_suffix}-api-gateway-authorizer-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -68,7 +73,7 @@ resource "aws_iam_role" "api_gateway_authorizer_role" {
 
 # IAM Policy para API Gateway invocar Lambda
 resource "aws_iam_role_policy" "api_gateway_lambda_policy" {
-  name = "${var.project_name}-api-gateway-lambda-policy"
+  name = "${var.project_name}${local.env_suffix}-api-gateway-lambda-policy"
   role = aws_iam_role.api_gateway_authorizer_role.id
 
   policy = jsonencode({
@@ -143,7 +148,7 @@ resource "aws_api_gateway_stage" "api_stage" {
 
 # CloudWatch Log Group para API Gateway
 resource "aws_cloudwatch_log_group" "api_gateway_logs" {
-  name              = "/aws/apigateway/${var.project_name}-api"
+  name              = "/aws/apigateway/${var.project_name}${local.env_suffix}-api"
   retention_in_days = 14
 
   tags = var.tags
@@ -151,7 +156,7 @@ resource "aws_cloudwatch_log_group" "api_gateway_logs" {
 
 # IAM Role para CloudWatch Logs do API Gateway
 resource "aws_iam_role" "api_gateway_cloudwatch_role" {
-  name = "${var.project_name}-api-gateway-cloudwatch-role"
+  name = "${var.project_name}${local.env_suffix}-api-gateway-cloudwatch-role"
 
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
@@ -171,7 +176,7 @@ resource "aws_iam_role" "api_gateway_cloudwatch_role" {
 
 # Policy para CloudWatch Logs
 resource "aws_iam_role_policy" "api_gateway_cloudwatch_policy" {
-  name = "${var.project_name}-api-gateway-cloudwatch-policy"
+  name = "${var.project_name}${local.env_suffix}-api-gateway-cloudwatch-policy"
   role = aws_iam_role.api_gateway_cloudwatch_role.id
 
   policy = jsonencode({

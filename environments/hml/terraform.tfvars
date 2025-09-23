@@ -1,5 +1,5 @@
 aws_region = "us-east-1"
-project_name = "api-gateway-hml"
+project_name = "api-gateway"
 stage_name = "hml"
 
 # Microserviços - usando httpbin.org para teste em hml

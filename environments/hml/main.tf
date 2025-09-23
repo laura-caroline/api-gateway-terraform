@@ -39,7 +39,7 @@ module "api_gateway" {
   microservices = var.microservices
 
   tags = {
-    Environment = "dev"
+    Environment = "hml"
     Project     = var.project_name
     ManagedBy   = "terraform"
   }

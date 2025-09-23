@@ -8,7 +8,7 @@ terraform {
   }
 
   backend "s3" {
-    bucket  = "api-gateway-terraform-states-074995673012"
+    bucket  = "api-gateway-terraform-states-074995673012-prod"
     key     = "environments/prod/terraform.tfstate"
     region  = "us-east-1"
     encrypt = true

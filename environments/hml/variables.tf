@@ -13,7 +13,7 @@ variable "project_name" {
 variable "stage_name" {
   description = "Nome do stage do API Gateway"
   type        = string
-  default     = "dev"
+  default     = "hml"
 }
 
 variable "microservices" {
