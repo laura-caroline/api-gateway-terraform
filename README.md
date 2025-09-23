@@ -26,15 +26,6 @@
 │           ├── index.ts            # Handler principal
 │           ├── jwt.service.ts      # Serviço de validação JWT
 │           └── types.ts            # Definições de tipos
-├── examples/                       # Exemplos e utilitários
-│   ├── legacy-lambda-authorizer/   # Código legado do Lambda (para referência)
-│   ├── debug-secret.js             # Script para debug de secrets
-│   ├── test-payload.json           # Payload de teste
-│   └── test-token.js               # Script para testar tokens
-├── scripts/                        # Scripts de automação
-│   ├── build-lambda.sh            # Script para build do Lambda
-│   ├── deploy.sh                  # Script de deploy
-│   └── destroy.sh                 # Script para destruir recursos
 ├── ARCHITECTURE.md                 # Documentação da arquitetura
 ├── README.md                       # Documentação principal
 ├── TROUBLESHOOTING.md             # Guia de solução de problemas
