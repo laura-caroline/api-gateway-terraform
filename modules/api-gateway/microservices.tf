@@ -32,8 +32,12 @@ resource "aws_api_gateway_method" "microservice_methods" {
   authorizer_id = aws_api_gateway_authorizer.jwt_authorizer.id
 
   request_parameters = {
-    "method.request.header.Authorization" = true
-    "method.request.path.proxy"           = true
+    "method.request.header.Authorization"     = true
+    "method.request.header.x-tenant-id"       = false
+    "method.request.header.Content-Type"      = false
+    "method.request.header.Accept"            = false
+    "method.request.header.User-Agent"        = false
+    "method.request.path.proxy"               = true
   }
 }
 
@@ -51,8 +55,27 @@ resource "aws_api_gateway_integration" "microservice_integration" {
   timeout_milliseconds    = 29000
   
   request_parameters = {
+    # Path proxy (obrigatório para capturar sub-paths)
     "integration.request.path.proxy" = "method.request.path.proxy"
+    
+    # Headers originais da requisição (passthrough)
+    "integration.request.header.Authorization"   = "method.request.header.Authorization"
+    "integration.request.header.x-tenant-id"     = "method.request.header.x-tenant-id"
+    "integration.request.header.Content-Type"    = "method.request.header.Content-Type"
+    "integration.request.header.Accept"          = "method.request.header.Accept"
+    "integration.request.header.User-Agent"      = "method.request.header.User-Agent"
+    
+    # Headers adicionais do contexto do authorizer
+    "integration.request.header.x-user-id"       = "context.authorizer.userId"
+    "integration.request.header.x-user-email"    = "context.authorizer.email"
+    "integration.request.header.x-tenant-context" = "context.authorizer.tenantId"
   }
+
+  # IMPORTANTE: HTTP_PROXY automaticamente repassa:
+  # - Todos os headers não mapeados explicitamente
+  # - Body completo (JSON, form-data, XML, texto, binário, etc.)
+  # - Query parameters (incluindo arrays e objetos)
+  # - Método HTTP (GET, POST, PUT, DELETE, etc.)
 }
 
 # Método OPTIONS para CORS (se necessário)
