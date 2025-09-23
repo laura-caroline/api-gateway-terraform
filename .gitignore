@@ -34,10 +34,8 @@ environments/dev/.terraform.lock.hcl
 .terraform.lock.hcl
 
 # Terraform variables files (podem conter secrets)
-environments/*/*.tfvars
 environments/*/*.tfvars.json
 # Any local tfvars files
-*.tfvars
 *.tfvars.json
 
 # Override files
