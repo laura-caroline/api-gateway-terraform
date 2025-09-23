@@ -8,8 +8,8 @@ terraform {
   }
 
   backend "s3" {
-    bucket  = "api-gateway-terraform-states-074995673012"
-    key     = "environments/dev/terraform.tfstate"
+    bucket  = "api-gateway-terraform-states-074995673012-hml"
+    key     = "environments/hml/terraform.tfstate"
     region  = "us-east-1"
     encrypt = true
   }
