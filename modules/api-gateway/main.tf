@@ -18,8 +18,8 @@ module "lambda_authorizer" {
 
   function_name           = "${var.project_name}-authorizer"
   project_name           = var.project_name
-  environment            = var.stage_name
-  jwt_secret_param_name  = "/common.${var.stage_name}/JWT_SECRET"
+  environment            = var.stage_name != "" ? var.stage_name : "prod"
+  jwt_secret_param_name  = var.stage_name == "hml" ? "/otto99.hml/JWT_SECRET" : "/common.prod/JWT_SECRET"
   tags                   = var.tags
 }
 
@@ -119,7 +119,7 @@ resource "aws_api_gateway_deployment" "api_deployment" {
 resource "aws_api_gateway_stage" "api_stage" {
   deployment_id = aws_api_gateway_deployment.api_deployment.id
   rest_api_id   = aws_api_gateway_rest_api.api.id
-  stage_name    = var.stage_name
+  stage_name    = "v1"
 
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.api_gateway_logs.arn

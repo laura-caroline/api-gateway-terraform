@@ -49,7 +49,7 @@ export class ParameterStoreService {
   }
 
   async getJwtSecret(): Promise<string> {
-    const paramName = process.env.JWT_SECRET_PARAM_NAME || '/common.prod/JWT_SECRET';
+    const paramName = process.env.NODE_ENV === 'prod'? '/common.prod/JWT_SECRET': '/otto99.hml/JWT_SECRET';
     return await this.getParameter(paramName, true);
   }
 
