@@ -127,6 +127,18 @@ export class JwtService {
       return headers['x-tenant-id'];
     }
 
+    // Aceitar também tenantUuid (formato do frontend)
+    if (headers && headers['tenantUuid']) {
+      console.log('Tenant ID found in tenantUuid header:', headers['tenantUuid']);
+      return headers['tenantUuid'];
+    }
+
+    // Aceitar também tenantuuid (formato alternativo)
+    if (headers && headers['tenantuuid']) {
+      console.log('Tenant ID found in tenantuuid header:', headers['tenantuuid']);
+      return headers['tenantuuid'];
+    }
+
     // Fallback para payload (apenas para tokens locais que não usam header)
     if (payload.tenant_id) {
       console.log('Tenant ID found in token payload:', payload.tenant_id);
@@ -140,6 +152,7 @@ export class JwtService {
 
     // Se não encontrar, retornar null
     console.log('No tenant ID found in headers or payload');
+    console.log('Available headers:', Object.keys(headers || {}));
     return null;
   }
 }

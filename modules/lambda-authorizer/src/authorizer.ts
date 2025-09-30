@@ -39,10 +39,10 @@ export class LambdaAuthorizer {
       
       const tenantId = this.jwtService.extractTenantId(payload, headers);
       if (!tenantId) {
-        console.error('Tenant ID not found in x-tenant-id header');
+        console.error('Tenant ID not found in any supported header (x-tenant-id, tenantUuid, tenantuuid)');
         console.error('Available headers:', Object.keys(headers));
         console.error('Token payload:', JSON.stringify(payload, null, 2));
-        throw new Error('Tenant ID not found in x-tenant-id header');
+        throw new Error('Tenant ID not found in any supported header (x-tenant-id, tenantUuid, tenantuuid)');
       }
 
       // Criar informações do usuário baseadas no payload do token
