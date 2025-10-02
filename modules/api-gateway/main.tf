@@ -48,7 +48,7 @@ resource "aws_api_gateway_authorizer" "jwt_authorizer" {
   authorizer_credentials = aws_iam_role.api_gateway_authorizer_role.arn
   type                  = "REQUEST"
   identity_source       = "method.request.header.Authorization"
-  authorizer_result_ttl_in_seconds = 300
+  authorizer_result_ttl_in_seconds = 0
 }
 
 # IAM Role para API Gateway invocar Lambda Authorizer
@@ -120,11 +120,79 @@ resource "aws_api_gateway_deployment" "api_deployment" {
   }
 }
 
+# Gateway Responses para aplicar CORS em erros de autorização
+resource "aws_api_gateway_gateway_response" "unauthorized" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  status_code   = "401"
+  response_type = "UNAUTHORIZED"
+
+  response_templates = {
+    "application/json" = "{\"message\":\"Unauthorized\"}"
+  }
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Methods" = "'GET,POST,PUT,DELETE,OPTIONS'"
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+}
+
+resource "aws_api_gateway_gateway_response" "access_denied" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  status_code   = "403"
+  response_type = "ACCESS_DENIED"
+
+  response_templates = {
+    "application/json" = "{\"message\":\"Access Denied\"}"
+  }
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Methods" = "'GET,POST,PUT,DELETE,OPTIONS'"
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+}
+
+resource "aws_api_gateway_gateway_response" "default_4xx" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  status_code   = "400"
+  response_type = "DEFAULT_4XX"
+
+  response_templates = {
+    "application/json" = "{\"message\":\"Bad Request\"}"
+  }
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Methods" = "'GET,POST,PUT,DELETE,OPTIONS'"
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+}
+
+resource "aws_api_gateway_gateway_response" "default_5xx" {
+  rest_api_id   = aws_api_gateway_rest_api.api.id
+  status_code   = "500"
+  response_type = "DEFAULT_5XX"
+
+  response_templates = {
+    "application/json" = "{\"message\":\"Internal Server Error\"}"
+  }
+
+  response_parameters = {
+    "gatewayresponse.header.Access-Control-Allow-Headers" = "'*'"
+    "gatewayresponse.header.Access-Control-Allow-Methods" = "'GET,POST,PUT,DELETE,OPTIONS'"
+    "gatewayresponse.header.Access-Control-Allow-Origin"  = "'*'"
+  }
+}
+
 # Stage do API Gateway
 resource "aws_api_gateway_stage" "api_stage" {
   deployment_id = aws_api_gateway_deployment.api_deployment.id
   rest_api_id   = aws_api_gateway_rest_api.api.id
   stage_name    = "v1"
+
+  # Desabilitar cache para evitar erros 304
+  cache_cluster_enabled = false
 
   access_log_settings {
     destination_arn = aws_cloudwatch_log_group.api_gateway_logs.arn

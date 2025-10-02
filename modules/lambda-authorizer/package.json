@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc",
-    "package": "npm run build && zip -r lambda-authorizer.zip . -x node_modules/.bin/* *.ts *.map",
+    "package": "npm run build && npm install --production && zip -r lambda-authorizer.zip . -x 'src/*' '*.ts' '*.map' '*.md' 'src.zip' '.terraform/*' 'node_modules/@types/*' 'node_modules/typescript/*' 'temp_extract/*'",
     "deploy": "npm run package && aws lambda update-function-code --function-name api-gateway-authorizer --zip-file fileb://lambda-authorizer.zip"
   },
   "dependencies": {

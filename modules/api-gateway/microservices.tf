@@ -73,6 +73,11 @@ resource "aws_api_gateway_integration" "microservice_integration" {
     "integration.request.header.x-user-id"       = "context.authorizer.userId"
     "integration.request.header.x-user-email"    = "context.authorizer.email"
     "integration.request.header.x-tenant-context" = "context.authorizer.tenantId"
+    
+    # Headers para desabilitar cache
+    "integration.request.header.Cache-Control"   = "'no-cache, no-store, must-revalidate'"
+    "integration.request.header.Pragma"          = "'no-cache'"
+    "integration.request.header.Expires"         = "'0'"
   }
 
   # IMPORTANTE: HTTP_PROXY automaticamente repassa:
@@ -121,6 +126,9 @@ resource "aws_api_gateway_method_response" "microservice_options_response" {
     "method.response.header.Access-Control-Allow-Headers" = true
     "method.response.header.Access-Control-Allow-Methods" = true
     "method.response.header.Access-Control-Allow-Origin"  = true
+    "method.response.header.Cache-Control"               = true
+    "method.response.header.Pragma"                       = true
+    "method.response.header.Expires"                     = true
   }
 }
 
@@ -134,9 +142,12 @@ resource "aws_api_gateway_integration_response" "microservice_options_integratio
   status_code = aws_api_gateway_method_response.microservice_options_response[each.key].status_code
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,tenantuuid,tenantUuid'"
+    "method.response.header.Access-Control-Allow-Headers" = "'*'"
     "method.response.header.Access-Control-Allow-Methods" = "'GET,POST,PUT,DELETE,OPTIONS'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+    "method.response.header.Cache-Control"               = "'no-cache, no-store, must-revalidate'"
+    "method.response.header.Pragma"                       = "'no-cache'"
+    "method.response.header.Expires"                     = "'0'"
   }
 }
 
@@ -154,6 +165,9 @@ resource "aws_api_gateway_method_response" "microservice_main_response_200" {
     "method.response.header.Access-Control-Allow-Headers" = true
     "method.response.header.Access-Control-Allow-Methods" = true
     "method.response.header.Access-Control-Allow-Origin"  = true
+    "method.response.header.Cache-Control"               = true
+    "method.response.header.Pragma"                       = true
+    "method.response.header.Expires"                     = true
   }
 }
 
@@ -170,6 +184,9 @@ resource "aws_api_gateway_method_response" "microservice_main_response_403" {
     "method.response.header.Access-Control-Allow-Headers" = true
     "method.response.header.Access-Control-Allow-Methods" = true
     "method.response.header.Access-Control-Allow-Origin"  = true
+    "method.response.header.Cache-Control"               = true
+    "method.response.header.Pragma"                       = true
+    "method.response.header.Expires"                     = true
   }
 }
 
@@ -186,6 +203,9 @@ resource "aws_api_gateway_method_response" "microservice_main_response_401" {
     "method.response.header.Access-Control-Allow-Headers" = true
     "method.response.header.Access-Control-Allow-Methods" = true
     "method.response.header.Access-Control-Allow-Origin"  = true
+    "method.response.header.Cache-Control"               = true
+    "method.response.header.Pragma"                       = true
+    "method.response.header.Expires"                     = true
   }
 }
 
@@ -200,9 +220,12 @@ resource "aws_api_gateway_integration_response" "microservice_main_integration_r
   selection_pattern = "2\\d{2}"
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,tenantuuid,tenantUuid'"
+    "method.response.header.Access-Control-Allow-Headers" = "'*'"
     "method.response.header.Access-Control-Allow-Methods" = "'GET,POST,PUT,DELETE,OPTIONS'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+    "method.response.header.Cache-Control"               = "'no-cache, no-store, must-revalidate'"
+    "method.response.header.Pragma"                       = "'no-cache'"
+    "method.response.header.Expires"                     = "'0'"
   }
 }
 
@@ -217,9 +240,12 @@ resource "aws_api_gateway_integration_response" "microservice_main_integration_r
   selection_pattern = "403"
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,tenantuuid,tenantUuid'"
+    "method.response.header.Access-Control-Allow-Headers" = "'*'"
     "method.response.header.Access-Control-Allow-Methods" = "'GET,POST,PUT,DELETE,OPTIONS'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+    "method.response.header.Cache-Control"               = "'no-cache, no-store, must-revalidate'"
+    "method.response.header.Pragma"                       = "'no-cache'"
+    "method.response.header.Expires"                     = "'0'"
   }
 }
 
@@ -234,8 +260,11 @@ resource "aws_api_gateway_integration_response" "microservice_main_integration_r
   selection_pattern = "401"
 
   response_parameters = {
-    "method.response.header.Access-Control-Allow-Headers" = "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,tenantuuid,tenantUuid'"
+    "method.response.header.Access-Control-Allow-Headers" = "'*'"
     "method.response.header.Access-Control-Allow-Methods" = "'GET,POST,PUT,DELETE,OPTIONS'"
     "method.response.header.Access-Control-Allow-Origin"  = "'*'"
+    "method.response.header.Cache-Control"               = "'no-cache, no-store, must-revalidate'"
+    "method.response.header.Pragma"                       = "'no-cache'"
+    "method.response.header.Expires"                     = "'0'"
   }
 }

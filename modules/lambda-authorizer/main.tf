@@ -98,7 +98,7 @@ resource "null_resource" "build_lambda" {
   }
 
   provisioner "local-exec" {
-    command = "cd ${path.module} && npm install && npm run build && npm run package"
+    command = "cd ${path.module} && npm install && npm run package"
   }
 }
 
@@ -118,9 +118,11 @@ data "archive_file" "lambda_zip" {
     "src",
     "*.md",
     "*.zip",
-    "node_modules/.bin",
+    "node_modules",
     "*.ts",
-    "*.map"
+    "*.map",
+    ".terraform",
+    "src.zip"
   ]
 
   depends_on = [null_resource.build_lambda]
